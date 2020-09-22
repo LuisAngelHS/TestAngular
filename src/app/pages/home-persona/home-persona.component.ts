@@ -42,14 +42,14 @@ export class HomePersonaComponent implements OnInit {
   //Método para Guardar en el LocalStorage..
  save(){
    this.submited=true
-  if (this.forma.valid === false) { // Verifica si todos los campos estan llenos..
+  if (this.forma.valid === false) { // Verificamos si todos los campos estan llenos..
     Swal.fire('¡Atención!', 'Los campos son obligatorios', 'error');
     return;
   }
   else {
     this.submited = false;
-    this.nombres.push(this.forma.value);
-    localStorage.setItem('KeyPersona', JSON.stringify(this.nombres)); //Guardamos el registro..
+    this.datos.persona.push(this.forma.value);
+    localStorage.setItem('KeyPersona', JSON.stringify(this.datos.persona)); //Guardamos el registro..
     Swal.fire(
       'Agregado Correctamente!',
       'Éxito!',
