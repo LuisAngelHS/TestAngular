@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  url:'https://randomapi.com'
+  url:'https://localhost:3040'
 };
 
 /*

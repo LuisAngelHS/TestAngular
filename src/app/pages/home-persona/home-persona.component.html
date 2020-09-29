@@ -1,7 +1,7 @@
 <div class="col-xs-12 col-sm-6 col-md-12">
     &nbsp;
     <h1>
-        <p style="text-align: center;">PERSONAS</p>
+        <p style="text-align: center;">CRUD ANGULAR WITH NODEJS</p>
     </h1>
 </div>
 <div class="row">
@@ -10,18 +10,21 @@
             <table class="table table-striped">
                 <thead>
                     <tr>
+                        <th scope="col">#</th>
                         <th scope="col">Nombre</th>
-                        <th scope="col">Edad</th>
-                        <th scope="col">Sexo</th>
-                        <th scope="col">Documento</th>
+                        <th scope="col">Precio</th>
+                        <th scope="col">Opciones</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let item of datos.persona">
-                        <th>{{item.name}}</th>
-                        <td>{{item.edad}}</td>
-                        <td>{{item.sexo}}</td>
-                        <td></td>
+                    <tr *ngFor="let item of datos.persona; let i = index">
+                        <th>{{item.Producto}}</th>
+                        <td>{{item.Nombre}}</td>
+                        <td>{{item.Precio}}</td>
+                        <td>
+                            <button class="btn btn-sm btn-icon-only pointer text-primary" data-toggle="modal" data-target="#editar" (click)="update(item,i)"> Editar</button>
+                            <button class="btn btn-sm btn-icon-only pointer text-primary" (click)="eliminar(item,i)"> Eliminar</button>
+                        </td>
                     </tr>
                 </tbody>
             </table>
@@ -32,35 +35,50 @@
 <div class="row">
     <div class="container">
         <div class="col-xs-12 col-sm-6 col-md-12">
+            <h2>
+                <p>Agregar Producto</p>
+            </h2>
             <form [formGroup]="forma" (ngSubmit)="save()">
                 <div class="form-group col-md-3">
                     <label for="" [ngClass]="{'text-danger': nameRequired && submited}">Nombre: </label>
                     <input class="form-control" placeholder="Nombre" type="text" name="name" formControlName="name" [ngClass]="{'is-valid': nameRequired && submited}">
                 </div>
                 <div class="form-group col-md-3">
-                    <label for="" [ngClass]="{'text-danger': edadRequired && submited}">Edad: </label>
-                    <input class="form-control" placeholder="Edad" type="number" name="edad" formControlName="edad" [ngClass]="{'is-valid': edadRequired && submited}">
+                    <label for="" [ngClass]="{'text-danger': precioRequired && submited}">Precio: </label>
+                    <input class="form-control" placeholder="Precio" type="text" name="precio" formControlName="precio" [ngClass]="{'is-valid': precioRequired && submited}">
                 </div>
-                <div class="form-group col-md-3">
-                    <label for="" [ngClass]="{'text-danger': sexoRequired && submited}">Sexo: </label>
-                    <!-- <input class="form-control" placeholder="Sexo" type="text" name="sexo" formControlName="sexo" [ngClass]="{'is-valid': sexoRequired && submited}"> -->
-                    <select class="custom-select" id="validationTooltip04" name="sexo" formControlName="sexo" [ngClass]="{'is-valid': sexoRequired && submited}" required>
-                        <option>Hombre</option>
-                        <option>Mujer</option>
-                      </select>
-                </div>
-                <div class="form-group col-md-3">
-                    <label for="" [ngClass]="{'text-danger': fileRequired && submited}">File: </label>
-                    <div class="custom-file">
-                        <input type="file" class="custom-file-input form-control-sm small" name="file" formControlName="file" [ngClass]="{'is-valid': fileRequired && submited}">
-                        <label class="custom-file-label" for="customFileLang">Subir Documento</label>
-                    </div>
-                </div>
-                &nbsp;
                 <div class="form-group col-md-3">
                     <button type="submit" class="btn btn-primary"> Guardar</button>
                 </div>
             </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="editar" tabindex="-1 " role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Editar Producto</h2>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="editClose">
+          <span aria-hidden="true ">&times;</span>
+        </button>
+            </div>
+            <div class="modal-body" style="text-align: center;">
+                <form #fu="ngForm">
+                    <div class="form-row">
+                        <div class="form-group col-md-10">
+                            <input type="text " class="form-control " placeholder="Nombre" name="Nombre" [(ngModel)]="Update.Nombre" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-10">
+                            <input type="number" class="form-control" placeholder="Precio" name="Precio" [(ngModel)]="Update.Precio" required>
+                        </div>
+                    </div>
+                    <button type="submit " class="btn btn-primary " (click)="actualizar() ">Actualizar</button>
+                </form>
+            </div>
         </div>
     </div>
 </div>

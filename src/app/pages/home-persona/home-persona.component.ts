@@ -3,6 +3,7 @@ import { FormGroup, FormBuilder, Validators, ReactiveFormsModule, FormsModule, N
 import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
 import { DatosService } from '../../services/datos.service';
+import { productos } from '../../services/interfaces';
 
 @Component({
   selector: 'app-home-persona',
@@ -13,6 +14,7 @@ export class HomePersonaComponent implements OnInit {
   forma: FormGroup;
   submited = false;
   nombres:any[]=[];
+  Update:any={};
 
   constructor(private fb: FormBuilder, public rout: Router, public datos:DatosService) {
     this.datos.getAll();
@@ -21,25 +23,22 @@ export class HomePersonaComponent implements OnInit {
 
   ngOnInit() {
     this.createF();
+   
   }
 
   //Método para crear validaciones..
   createF() {
     this.forma = this.fb.group({
       name: [null, Validators.required],
-      edad: [null, Validators.required],
-      sexo: [null, Validators.required],
-      file: [null, Validators.required],
+      precio: [null, Validators.required],
     });
   }
   
   get nameRequired() { return this.forma.get('name').invalid; }
-  get edadRequired() { return this.forma.get('edad').invalid; }
-  get sexoRequired() { return this.forma.get('sexo').invalid; }
-  get fileRequired() { return this.forma.get('file').invalid; }
+  get precioRequired() { return this.forma.get('precio').invalid; }
 
 
-  //Método para Guardar en el LocalStorage..
+  //Método para Guardar en la bd..
  save(){
    this.submited=true
   if (this.forma.valid === false) { // Verificamos si todos los campos estan llenos..
@@ -48,18 +47,56 @@ export class HomePersonaComponent implements OnInit {
   }
   else {
     this.submited = false;
-    this.datos.persona.push(this.forma.value);
-    localStorage.setItem('KeyPersona', JSON.stringify(this.datos.persona)); //Guardamos el registro..
+    this.datos.AddProducto(this.forma.value).then(succ=>{
+      console.log(succ);
+      this.datos.getAll();
+    })
     Swal.fire(
       'Agregado Correctamente!',
       'Éxito!',
       'success'
     )
-    const obtener = localStorage.getItem('KeyPersona'); // Obtenemos el resgistro del LocalStorage..
-      let datos= JSON.parse(obtener);
-      console.log(datos);
-      this.forma.reset();
-      
+      this.forma.reset(); 
   }
+ }
+
+ //Obtiene la posición..
+ update(item,i){
+   console.log(item);
+   this.Update= item;
+   console.log(this.Update);
+ }
+
+ //Actulizar registro..
+ actualizar(){
+   console.log(this.Update.Producto);
+   this.datos.update(this.Update.Producto,this.Update).then(succ=>{
+     console.log(succ);
+   })
+   document.getElementById('editClose').click();
+ }
+
+ //Eliminar registro por medio del ID..
+ eliminar(item,i){
+  Swal.fire({
+    title: 'Está seguro en eliminar?',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Si, Eliminar!'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      this.datos.eliminar(item.Producto).then(succ=>{
+        console.log(succ);
+        this.datos.persona.splice(i,1);
+      })
+      Swal.fire(
+        'Producto Eliminado!',
+        'Éxito!'
+      )
+    }
+  })
+
  }
 }
